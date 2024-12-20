@@ -6,7 +6,7 @@ installArgoCD: false
 ingressnginx: false
 
 # installArgoRollouts enable true will install argo-rollouts
-installArgoRollouts: true
+installArgoRollouts: false
 
 # installArgoWorkflows enable true will install argo-workflows
 installArgoWorkflows: false
