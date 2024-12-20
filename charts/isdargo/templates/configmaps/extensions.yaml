@@ -1,0 +1,15 @@
+{{- if .Values.installArgoCD }}
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCDExtension
+metadata:
+  annotations:
+    "helm.sh/hook": "post-install"
+    "helm.sh/hook-weight": "10"
+  name: opsmx-extensions
+  finalizers:
+  - extensions-finalizer.argocd.argoproj.io
+spec:
+  sources:
+  - web:
+      url: https://github.com/OpsMx/rollout-extension/releases/download/v0.3.11/extension.tar
+{{- end }}

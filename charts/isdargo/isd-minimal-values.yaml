@@ -1,0 +1,70 @@
+##### This file can be used for Installing Only ISD Components ###############################
+# Update the controller URL which needs to be reachable from other clusters where ArgoCD is running
+# After installation, the DNS must be updated to point this to EXTERNAL-IP of the agent-grpc service
+# kubectl get svc -n opsmx-isd agent-grpc
+###################################
+forwarder:
+  enabled: true
+  agent:
+    image: quay.io/opsmxpublic/agent-client:v5.1.1
+    serviceType: ClusterIP
+    # Value is also used in sapor configuration for kubernetes.agent.serverHostName
+    host: isd-argo-in.argocd.opsmx.net
+    ingress:
+      annotations:
+        kubernetes.io/ingress.class: nginx
+      tls:
+        secretName: controller-ingress
+  image:
+    repository: quay.io/opsmxpublic/agent-controller
+    tag: v5.1.1
+    pullPolicy: IfNotPresent
+  serverNames:
+    - agent-grpc
+
+  serviceAnnotations: {}
+
+global:
+  oesUI:
+    # Please below string for all occurences in this file with proper dns entry to access the ISD UI eg: isdui.example.ops.com
+    host: isd-oes-ui.argocd.opsmx.net
+
+  vela:
+    # Please below string for all occurences in this file with proper dns entry to access the ISD UI eg: keycloak.example.ops.com$
+    host: isd-vela-argo.argocd.opsmx.net
+
+#######################################################################################################################
+# Values of OES Database
+db:
+  ## Set it to false if any external database is to be used
+  enabled: true
+  url: jdbc:postgresql://oes-db:5432
+  username: postgres
+  password: networks123
+###############################################################################
+## Values of OEA Sapor (Security Audit Policy Onboarding & Release)
+sapor:
+  ## Image specific details
+  image:
+    repository: ubi8-oes-sapor
+    tag: v4.1.8
+    pullPolicy: IfNotPresent
+
+#####User doesn't need to change the below flags let it be the default one######################
+installArgoCD: false
+######################################################################################
+installArgoRollouts: false
+#######################################################################################
+installdemoapps: false
+#######################################################################################
+autoconfigureagent: false
+#######################################################################################
+installkeycloak: false
+################################################################################
+## Values of OEA notificationservice
+##
+notificationservice:
+  host: smtp.gmail.com
+  port: 587
+  username: REPLACE.YOUR.MAIL.ID
+  password: REPLACE.YOUR.MAIL.PASSWORD

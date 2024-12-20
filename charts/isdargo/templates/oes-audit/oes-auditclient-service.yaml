@@ -1,0 +1,27 @@
+{{- if (eq .Values.installationMode "OEA-AP") -}}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: oes
+    component: auditclient
+{{ include "oes.standard-labels" . | indent 4 }}
+{{- if .Values.auditClient.serviceAnnotations }}
+  annotations:
+{{ toYaml .Values.auditClient.serviceAnnotations | indent 4 }}
+{{- end }}
+  name: oes-audit-client
+spec:
+  ports:
+  - name: auditclient
+    port: 8098
+    protocol: TCP
+    targetPort: 8098
+    {{- if eq .Values.k8sServiceType "NodePort" }}
+    nodePort: 8098
+    {{- end }}
+  selector:
+    app: oes
+    component: auditclient
+  type: {{ .Values.k8sServiceType }}
+{{- end -}}

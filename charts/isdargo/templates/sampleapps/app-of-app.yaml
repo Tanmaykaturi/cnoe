@@ -1,0 +1,24 @@
+{{- if and (.Values.installArgoCD) (.Values.installdemoapps) -}}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+    "helm.sh/hook-weight": "13"
+  name: app-of-app
+spec:
+  destination:
+    name: in-cluster
+    namespace: {{ .Release.Namespace }}
+    server: ''
+  source:
+    path: sampleapps
+    repoURL: 'https://github.com/opsmx/isd-sample-apps.git'
+    targetRevision: HEAD
+  project: opsmxproj
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+{{- end -}}

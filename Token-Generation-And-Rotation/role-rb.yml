@@ -1,0 +1,34 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: secret-list
+rules:
+- apiGroups:
+  - ""
+  - apps
+  resources:
+  - secrets
+  - pods
+  - pods/exec
+  - deployments
+  - configmaps
+  - replicasets
+  verbs:
+  - get
+  - patch
+  - update 
+  - list
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: secret-list
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: secret-list
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: isd-argo #Change the Namespace accordingly

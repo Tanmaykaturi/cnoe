@@ -1,0 +1,37 @@
+{{- if and (.Values.installArgoCD) (.Values.autoconfigurecarina) }}
+argos:
+  - name: oesargo
+    {{- if and (.Values.global.createIngress) (.Values.global.certManager.installed) }}
+    url: https://{{ .Values.global.argocd.host }}
+    {{- else }}
+    {{- if and (.Values.global.createIngress) (not .Values.global.certManager.installed) }}
+    url: http://{{ .Values.global.argocd.host }}
+    {{- else }}
+    url: http://{{ .Release.Name }}-argocd-server:80
+    {{- end }}
+    {{- end }}
+    token: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+{{- end }}
+httpListenPort: 8091
+argoUpdateFrequencySeconds: 30 
+rbac:
+  httpListenPort: 8092
+controller:
+  url: 'http://opsmx-controller-controller1:9003'
+  token: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+platformServiceUrl: http://oes-platform:8095
+databases:
+  audit:
+    type: postgresql
+    connectString: host=oes-db  user='{{ .Values.db.username }}' password='{{ .Values.db.password }}' database=auditdb
+  platform:
+    type: postgresql
+    connectString: host=oes-db user='{{ .Values.db.username }}' password='{{ .Values.db.password }}' database=platformdb
+message-broker:
+  enabled: true
+  username: 'rabbitmq'
+  password: 'Networks123'
+  host: rabbitmq-service
+  port: 5672
+  endpoint:
+    name: rabbitmq

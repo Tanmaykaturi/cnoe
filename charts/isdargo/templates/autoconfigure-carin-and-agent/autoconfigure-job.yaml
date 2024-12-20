@@ -1,0 +1,43 @@
+{{- if or .Values.autoconfigurecarina .Values.autoconfigureagent }}
+{{- if (eq .Values.installationMode "OEA-AP") }}
+{{- if and .Values.installArgoCD .Release.IsInstall }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    "helm.sh/hook": "post-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+    "helm.sh/hook-weight": "5"
+  labels:
+    app: oes
+    autoconfig: oes
+{{ include "oes.standard-labels" . | indent 4 }}
+  name: oes-autoconfigure
+spec:
+  template:
+    metadata:
+      labels:
+        app: oes
+{{ include "oes.standard-labels" . | indent 8 }}
+    spec:
+      serviceAccountName: oes-auto-configure-{{ .Release.Namespace }}
+      containers:
+      - command: ["sh", "/tmp/config/datasource-api.sh" ]
+        name: auto-configure
+        image: {{ .Values.global.customImages.registry }}/awsgit:v2-openssh-javalibs
+        volumeMounts:
+        - mountPath: /tmp/config
+          name: autoconfigure
+      {{- if .Values.imagePullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecret }}
+      {{- end }}
+      restartPolicy: OnFailure
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: oes-autoconfigure
+        name: autoconfigure
+{{- end }}
+{{- end }}
+{{- end }}

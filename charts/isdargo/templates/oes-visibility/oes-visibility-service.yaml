@@ -1,0 +1,27 @@
+{{- if (eq .Values.installationMode "OEA-AP") -}}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: oes
+    component: visibility
+{{ include "oes.standard-labels" . | indent 4 }}
+{{- if .Values.visibility.serviceAnnotations }}
+  annotations:
+{{ toYaml .Values.visibility.serviceAnnotations | indent 4 }}
+{{- end }}
+  name: oes-visibility
+spec:
+  type: {{ .Values.k8sServiceType }}
+  ports:
+  - name: visibility
+    protocol: TCP
+    port: 8096
+    targetPort: 8096
+    {{- if eq .Values.k8sServiceType "NodePort" }}
+    nodePort: 8096
+    {{- end }}
+  selector:
+    app: oes
+    component: visibility
+{{- end -}}
