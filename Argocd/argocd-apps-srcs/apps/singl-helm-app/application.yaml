@@ -9,7 +9,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   source:
     repoURL: 'https://github.com/OpsMx/cnoe.git'
-    path: apps-resources/single-helm-resource
+    path: Argocd/argocd-apps-srcs/argocd-re-src/single-helm-src
     targetRevision: main
     helm:
       valueFiles:
