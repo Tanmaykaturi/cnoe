@@ -215,7 +215,7 @@ podLabels: {}
 ##
 resources:
   requests:
-    memory: 4Gi
+    memory: 2Gi
 
 ## Create a bucket after minio install
 ##
