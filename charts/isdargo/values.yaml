@@ -1337,7 +1337,7 @@ carinamanager:
   ##
   image:
     repository: carina-manager
-    tag: v1.15.2
+    tag: v1.15.5
     pullPolicy: IfNotPresent
 
   serviceAnnotations: {}
@@ -1643,7 +1643,7 @@ platform:
   ## Image specific details
   image:
     repository: ubi8-oes-platform
-    tag: v4.1.9-202406241023
+    tag: isd-argo-2024.08.00-202409061155
     pullPolicy: IfNotPresent
 
   annotations:
