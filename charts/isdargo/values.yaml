@@ -3,7 +3,7 @@
 installArgoCD: false
 
 # install ingress-nginx if not installed in the cluster
-ingressnginx: false
+ingressnginx: true
 
 # installArgoRollouts enable true will install argo-rollouts
 installArgoRollouts: false
