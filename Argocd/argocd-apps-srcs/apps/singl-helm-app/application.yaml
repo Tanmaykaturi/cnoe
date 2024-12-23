@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: single-helm-app-non-prod
+  namespace: argocd
+spec:
+  destination:
+    namespace: single-helm
+    server: 'https://kubernetes.default.svc'
+  source:
+    repoURL: 'https://github.com/OpsMx/cnoe.git'
+    path: apps-resources/single-helm-resource
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values.yaml
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
