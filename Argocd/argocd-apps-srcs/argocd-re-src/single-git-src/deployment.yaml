@@ -1,0 +1,21 @@
+# This YAML defines a Kubernetes Deployment for the guestbook-ui application, specifying a single replica for the user interface component of a guestbook application. It utilizes the gcr.io/heptio-images/ks-guestbook-demo:0.2 image and exposes port 80 for incoming traffic.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guestbook-ui
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: guestbook-ui
+  template:
+    metadata:
+      labels:
+        app: guestbook-ui
+    spec:
+      containers:
+      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+        name: guestbook-ui
+        ports:
+        - containerPort: 80
