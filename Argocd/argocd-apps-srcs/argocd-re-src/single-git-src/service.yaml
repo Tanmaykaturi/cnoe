@@ -1,0 +1,11 @@
+# This YAML defines a Kubernetes Service for the guestbook-ui application, which exposes port 80 to allow external access to the application. The service selects pods with the label app: guestbook-ui, routing traffic to these pods on the same port (80)
+apiVersion: v1
+kind: Service
+metadata:
+  name: guestbook-ui
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: guestbook-ui
