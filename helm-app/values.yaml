@@ -1,0 +1,9 @@
+appName: single-helm-app-non-prod
+argocdNamespace: argocd
+appNamespace: single-helm
+k8sServer: 'https://kubernetes.default.svc'
+repoURL: 'https://github.com/OpsMx/cnoe.git'
+repoPath: Argocd/argocd-apps-srcs/argocd-re-src/single-helm-src
+targetRevision: main
+helmValueFile: values.yaml
+project: default
