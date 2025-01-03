@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  myvalue: mykey
+  secondvalue: secondkey
+  thisdkey: thisdvalue
+  fourth: four
+  fifth: five
+  sixth: six
+  seventh: seven
+  # eigth: eight
+  # ninth: nine
+kind: ConfigMap
+metadata:
+  name: my-list-configmap
