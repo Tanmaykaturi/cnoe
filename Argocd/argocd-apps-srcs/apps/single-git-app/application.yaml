@@ -6,12 +6,12 @@ metadata:
 spec:
   project: cnoe-proj-argocd-apps
   source:
-    repoURL: https://github.com/OpsMx/argo-sample-apps.git
+    repoURL: https://github.com/OpsMx/cnoe.git
     path: Argocd/argocd-apps-srcs/argocd-re-src/single-git-src
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
-    namespace: git-src-app-nav
+    namespace: git-src-apps-nav
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
