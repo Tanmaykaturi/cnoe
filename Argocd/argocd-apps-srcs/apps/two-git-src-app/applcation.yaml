@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: two-git-sources
+  namespace: argocd
+spec:
+  project: prod-environment
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: proj7-two-git-prod-env
+  sources:
+    - repoURL: 'https://github.com/OpsMx/argo-sample-apps.git'
+      path: apps-resources/single-git-resources
+      targetRevision: HEAD
+    - repoURL: 'https://github.com/OpsMx/argo-sample-apps.git'
+      path: apps-resources/double-git-resources
+      targetRevision: HEAD
