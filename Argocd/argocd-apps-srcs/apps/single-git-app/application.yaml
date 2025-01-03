@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: single-git-app-dev
+  name: single-git-guestbook-img-app
   namespace: argocd
 spec:
-  project: dev-environment
+  project: cnoe-proj-argocd-apps
   source:
     repoURL: https://github.com/OpsMx/argo-sample-apps.git
-    path: apps-resources/single-git-resources
+    path: Argocd/argocd-apps-srcs/argocd-re-src/single-git-src
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
-    namespace: proj2-single-git-dev-env
+    namespace: git-src-app-nav
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
