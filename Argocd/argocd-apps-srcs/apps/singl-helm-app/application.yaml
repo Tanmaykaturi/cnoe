@@ -1,23 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: single-helm-app-non-prod
-  namespace: argocd
+  name: sample-helm-app
 spec:
   destination:
-    namespace: single-helm
-    server: 'https://kubernetes.default.svc'
+    server: 'https://kubernetes.default.svc'  # Direct connection to the server
+    namespace: helm-app-nav
   source:
-    repoURL: 'https://github.com/OpsMx/cnoe.git'
-    path: Argocd/argocd-apps-srcs/argocd-re-src/single-helm-src
-    targetRevision: main
-    helm:
-      valueFiles:
-        - values.yaml
-  project: default
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+    path: 'cnoe-charts'
+    repoURL: 'https://opsmx.github.io/cnoe-helm'
+    targetRevision: 0.1.0
+    chart: cnoe-charts
+  project: cnoe-proj-argocd-apps  # Use the new project here
