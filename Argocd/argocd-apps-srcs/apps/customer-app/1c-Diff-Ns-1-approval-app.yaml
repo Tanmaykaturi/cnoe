@@ -50,11 +50,6 @@ spec:
     - repoURL: https://opsmx.github.io/cnoe-helm
       chart: cnoe-charts
       targetRevision: 0.1.0
-      helm:
-        releaseName: postgresql
-        values: |
-          postgresqlPassword: "mysecretpassword"
-          postgresqlDatabase: "mydatabase"
   destination:
     server: https://kubernetes.default.svc  # Replace with the actual Kubernetes API URL for Cluster3
     namespace: multisource
