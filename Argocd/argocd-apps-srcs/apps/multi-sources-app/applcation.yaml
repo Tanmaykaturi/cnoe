@@ -7,9 +7,9 @@ spec:
   project: default
   source:
     # First Source (Frontend from Git Repository)
-    repoURL: https://github.com/myorg/frontend-repo
+    repoURL: https://github.com/OpsMx/cnoe.git
     targetRevision: main
-    path: k8s/frontend
+    path: Argocd/argocd-apps-srcs/argocd-re-src/single-helm-src
     helm:
       releaseName: frontend-app
       valueFiles:
@@ -25,14 +25,14 @@ spec:
       - CreateNamespace=true
   # Second Source (Backend from a Different Git Repository)
   sources:
-    - repoURL: https://github.com/myorg/backend-repo
+    - repoURL: https://github.com/OpsMx/cnoe.git
       targetRevision: main
-      path: k8s/backend
+      path: Argocd/argocd-apps-srcs/argocd-re-src/single-git-src
   # Optional third source (Database from a Helm chart)
   source:
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: postgresql
-    targetRevision: 10.3.14
+    repoURL: https://opsmx.github.io/cnoe-helm
+    chart: cnoe-charts
+    targetRevision: 0.1.0
     helm:
       releaseName: postgresql
       values: |
@@ -40,7 +40,7 @@ spec:
         postgresqlDatabase: "mydatabase"
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: multisource
   syncPolicy:
     automated:
       prune: true
