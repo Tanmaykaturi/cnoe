@@ -1,19 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-3
+  name: nginx-deployment
+  namespace: default  # Change to your desired namespace if necessary
 spec:
-  replicas: 2
+  replicas: 1  # Number of replicas (pods) to deploy
   selector:
     matchLabels:
-      app: app-3
+      app: nginx
   template:
     metadata:
       labels:
-        app: app-3
+        app: nginx
     spec:
       containers:
-        - name: app-3-container
-          image: alpine:latest  # Image for app-3
+        - name: nginx
+          image: nginx:latest  # Using the latest Nginx image from Docker Hub
           ports:
-            - containerPort: 80
+            - containerPort: 80  # Exposing port 80 on the container
