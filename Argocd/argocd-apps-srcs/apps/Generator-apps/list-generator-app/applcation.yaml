@@ -27,7 +27,7 @@ spec:
         path: '{{path}}'  # This will be replaced only for Git-based applications
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{name}}-namespace'
+        namespace: 'list-appset-app-nav'  # Both apps will be deployed in the 'cnoe-apps' namespace
       syncPolicy:
         automated:
           prune: true
