@@ -15,7 +15,7 @@ spec:
       valueFiles:
         - values.yaml
   destination:
-    server: https://cluster1-k8s-api-url  # Replace with the actual Kubernetes API URL for Cluster1
+    server: https://kubernetes.default.svc  # Replace with the actual Kubernetes API URL for Cluster1
     namespace: namespace1
   syncPolicy:
     # Manual approval before sync
@@ -33,7 +33,7 @@ spec:
       targetRevision: main
       path: Argocd/argocd-apps-srcs/argocd-re-src/single-git-src
   destination:
-    server: https://cluster2-k8s-api-url  # Replace with the actual Kubernetes API URL for Cluster2
+    server: https://kubernetes.default.svc  # Replace with the actual Kubernetes API URL for Cluster2
     namespace: namespace2
   syncPolicy:
     # Manual approval before sync
@@ -56,7 +56,7 @@ spec:
           postgresqlPassword: "mysecretpassword"
           postgresqlDatabase: "mydatabase"
   destination:
-    server: https://cluster3-k8s-api-url  # Replace with the actual Kubernetes API URL for Cluster3
+    server: https://kubernetes.default.svc  # Replace with the actual Kubernetes API URL for Cluster3
     namespace: multisource
   syncPolicy:
     # Manual approval before sync
