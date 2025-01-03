@@ -8,26 +8,25 @@ spec:
     - list:
         elements:
           - name: list-appset-first-app-apline-img-nav
-            repoURL: 'https://github.com/OpsMx/cnoe.git'  # Git repo URL
-            targetRevision: 'HEAD'  # Git repo revision (e.g., 'master', 'HEAD', etc.)
-            path: Argocd/argocd-apps-srcs/argocd-re-src/Generator-appset-resources/list-appset-resources/single-list-appset-src  # Path to the app in the Git repository
+            repoURL: 'https://github.com/OpsMx/cnoe.git'
+            targetRevision: 'HEAD'
+            path: Argocd/argocd-apps-srcs/argocd-re-src/Generator-appset-resources/list-appset-resources/single-list-appset-src
           - name: list-appset-second-app-nginx-img-nav
-            repoURL: 'https://opsmx.github.io/cnoe-helm'  # Helm repo URL
-            chart: 'cnoe-charts'  # Helm chart name
-            targetRevision: '0.1.0'  # Helm chart version (e.g., 'latest', '1.0.0')
+            repoURL: 'https://github.com/OpsMx/cnoe.git'
+            targetRevision: 'HEAD'
+            path: Argocd/argocd-apps-srcs/argocd-re-src/Generator-appset-resources/list-appset-resources/two-list-appset-src
   template:
     metadata:
       name: '{{name}}'
     spec:
-      project: cnoe-proj-argocd-apps
+      project: frontend-apps
       source:
         repoURL: '{{repoURL}}'
         targetRevision: '{{targetRevision}}'
-        chart: '{{chart}}'  # This will be replaced only for Helm, ignore for Git-based applications
-        path: '{{path}}'  # This will be replaced only for Git-based applications
+        path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: 'list-appset-app-nav'  # Both apps will be deployed in the 'cnoe-apps' namespace
+        namespace: 'list-appset-app-nav'
       syncPolicy:
         automated:
           prune: true
