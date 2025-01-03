@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: git-appset-staging
+  namespace: argocd
+spec:
+  generators:
+    - git:                 
+        repoURL: "https://github.com/OpsMx/argo-sample-apps.git"
+        revision: "HEAD"
+        directories:
+          - path: "apps-resources/generator-resources/git-resources/*"
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: staging-environment
+      source:
+        repoURL: "https://github.com/OpsMx/argo-sample-apps.git"
+        targetRevision: "HEAD"
+        path: '{{path}}'
+      destination:
+        server: "https://kubernetes.default.svc"
+        namespace: 'proj10-staging-env-git-appset'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
