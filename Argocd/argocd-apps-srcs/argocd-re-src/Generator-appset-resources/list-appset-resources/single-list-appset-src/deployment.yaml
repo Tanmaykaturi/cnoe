@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-alpine
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-alpine
+  template:
+    metadata:
+      labels:
+        app: app-alpine
+    spec:
+      containers:
+        - name: app-container
+          image: alpine:latest  # Image for app-3
+          ports:
+            - containerPort: 80
