@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: multi-source-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    # First Source (Frontend from Git Repository)
+    repoURL: https://github.com/myorg/frontend-repo
+    targetRevision: main
+    path: k8s/frontend
+    helm:
+      releaseName: frontend-app
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  # Second Source (Backend from a Different Git Repository)
+  sources:
+    - repoURL: https://github.com/myorg/backend-repo
+      targetRevision: main
+      path: k8s/backend
+  # Optional third source (Database from a Helm chart)
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: postgresql
+    targetRevision: 10.3.14
+    helm:
+      releaseName: postgresql
+      values: |
+        postgresqlPassword: "mysecretpassword"
+        postgresqlDatabase: "mydatabase"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
