@@ -11,7 +11,6 @@ spec:
     targetRevision: main
     path: Argocd/argocd-apps-srcs/argocd-re-src/single-helm-src
     helm:
-      releaseName: frontend-app
       valueFiles:
         - values.yaml
   destination:
@@ -35,11 +34,6 @@ spec:
     - repoURL: https://opsmx.github.io/cnoe-helm
       chart: cnoe-charts
       targetRevision: 0.1.0
-      helm:
-        releaseName: postgresql
-        values: |
-          postgresqlPassword: "mysecretpassword"
-          postgresqlDatabase: "mydatabase"
   destination:
     server: https://kubernetes.default.svc
     namespace: multisource
