@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: parent-app-of-apps
+  namespace: argocd
+spec:
+  project: microservices
+  source:
+    repoURL: "https://github.com/OpsMx/argo-sample-apps.git"  # Corrected URL, no leading/trailing spaces
+    targetRevision: "HEAD"
+    path: apps-resources/app-of-apps-resources/parent-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app-of-apps
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
