@@ -5,8 +5,8 @@ metadata:
   namespace: argocd
 spec:
   project: default
+  # First Source (Frontend from Git Repository)
   source:
-    # First Source (Frontend from Git Repository)
     repoURL: https://github.com/OpsMx/cnoe.git
     targetRevision: main
     path: Argocd/argocd-apps-srcs/argocd-re-src/single-helm-src
@@ -23,21 +23,23 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+  
   # Second Source (Backend from a Different Git Repository)
   sources:
     - repoURL: https://github.com/OpsMx/cnoe.git
       targetRevision: main
       path: Argocd/argocd-apps-srcs/argocd-re-src/single-git-src
+  
   # Optional third source (Database from a Helm chart)
-  source:
-    repoURL: https://opsmx.github.io/cnoe-helm
-    chart: cnoe-charts
-    targetRevision: 0.1.0
-    helm:
-      releaseName: postgresql
-      values: |
-        postgresqlPassword: "mysecretpassword"
-        postgresqlDatabase: "mydatabase"
+  sources:
+    - repoURL: https://opsmx.github.io/cnoe-helm
+      chart: cnoe-charts
+      targetRevision: 0.1.0
+      helm:
+        releaseName: postgresql
+        values: |
+          postgresqlPassword: "mysecretpassword"
+          postgresqlDatabase: "mydatabase"
   destination:
     server: https://kubernetes.default.svc
     namespace: multisource
