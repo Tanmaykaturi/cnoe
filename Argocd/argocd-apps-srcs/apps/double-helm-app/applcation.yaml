@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: double-helm-chart-app
+  namespace: argocd
+spec:
+  project: qa-environment
+  source:
+    repoURL: 'https://github.com/OpsMx/argo-sample-apps.git'
+    targetRevision: HEAD
+    path: apps-resources/double-helm-resource
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: proj8-qa-env-double-helm
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  syncOptions:
+    - CreateNamespace=true
