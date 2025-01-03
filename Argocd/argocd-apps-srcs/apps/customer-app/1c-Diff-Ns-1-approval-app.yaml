@@ -1,0 +1,70 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: multi-cluster-app
+  namespace: argocd
+spec:
+  project: default
+  # First Cluster (Cluster1 - Namespace: "namespace1")
+  source:
+    repoURL: https://github.com/OpsMx/cnoe.git
+    targetRevision: main
+    path: Argocd/argocd-apps-srcs/argocd-re-src/single-helm-src
+    helm:
+      releaseName: frontend-app
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://cluster1-k8s-api-url  # Replace with the actual Kubernetes API URL for Cluster1
+    namespace: namespace1
+  syncPolicy:
+    # Manual approval before sync
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    # Enabling manual approval for sync
+    syncStrategy:
+      apply: "false"  # Sync must be manually triggered
+  # Second Cluster (Cluster2 - Namespace: "namespace2")
+  sources:
+    - repoURL: https://github.com/OpsMx/cnoe.git
+      targetRevision: main
+      path: Argocd/argocd-apps-srcs/argocd-re-src/single-git-src
+  destination:
+    server: https://cluster2-k8s-api-url  # Replace with the actual Kubernetes API URL for Cluster2
+    namespace: namespace2
+  syncPolicy:
+    # Manual approval before sync
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    # Enabling manual approval for sync
+    syncStrategy:
+      apply: "false"  # Sync must be manually triggered
+  # Optional third source (Database from a Helm chart) for a different cluster (Cluster3)
+  sources:
+    - repoURL: https://opsmx.github.io/cnoe-helm
+      chart: cnoe-charts
+      targetRevision: 0.1.0
+      helm:
+        releaseName: postgresql
+        values: |
+          postgresqlPassword: "mysecretpassword"
+          postgresqlDatabase: "mydatabase"
+  destination:
+    server: https://cluster3-k8s-api-url  # Replace with the actual Kubernetes API URL for Cluster3
+    namespace: multisource
+  syncPolicy:
+    # Manual approval before sync
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    # Enabling manual approval for sync
+    syncStrategy:
+      apply: "false"  # Sync must be manually triggered
