@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: list-applicationset-frontend-apps
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: list-applicationset-first-application
+            repoURL: 'https://github.com/OpsMx/argo-sample-apps.git'
+            targetRevision: 'HEAD'
+            path: apps-resources/single-git-resources
+          - name: list-applicationset-second-application
+            repoURL: 'https://github.com/OpsMx/argo-sample-apps.git'
+            targetRevision: 'HEAD'
+            path: apps-resources/double-git-resources
+  template:
+    metadata:
+      name: '{{name}}'
+    spec:
+      project: frontend-apps
+      source:
+        repoURL: '{{repoURL}}'
+        targetRevision: '{{targetRevision}}'
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{name}}-namespace'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
