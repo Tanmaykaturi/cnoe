@@ -18,8 +18,8 @@ spec:
         value: cnoe.opsmx.org
       - name: clusterissuer
         value: letsencrypt-isd-nav-argocd
-    path: vcluster-argocd-chart
-    repoURL: https://github.com/TejaswiniOpsmx/vcluster-helm
+    path: apps-resources/clusters-resources/vcluster-resources
+    repoURL: https://github.com/OpsMx/argo-sample-apps.git
     targetRevision: master
   syncPolicy:
     automated: {}
