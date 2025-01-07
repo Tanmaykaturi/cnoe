@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  generation: 10
+  name: vcluster-naveen
+  namespace: argocd
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    helm:
+      parameters:
+      - name: username
+        value: vcluster-naveen
+      - name: hostname
+        value: cnoe.opsmx.org
+      - name: clusterissuer
+        value: letsencrypt-isd-nav-argocd
+    path: vcluster-argocd-chart
+    repoURL: https://github.com/TejaswiniOpsmx/vcluster-helm
+    targetRevision: master
+  syncPolicy:
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true
