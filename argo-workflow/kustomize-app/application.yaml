@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: kustomize-deploy-
+spec:
+  entrypoint: kustomize-deploy
+  templates:
+    - name: kustomize-deploy
+      steps:
+        - - name: clone-repo
+            template: clone-repo
+        - - name: apply-kustomize
+            template: apply-kustomize
+
+    - name: clone-repo
+      container:
+        image: "alpine/git"
+        command: ["/bin/sh", "-c"]
+        args: ["git clone https://github.com/your/repository.git /mnt/repo"]
+        volumeMounts:
+          - name: repo
+            mountPath: /mnt/repo
+      volumes:
+        - name: repo
+          emptyDir: {}
+
+    - name: apply-kustomize
+      container:
+        image: "kustomize/kustomize:v4.5.7"
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            cd /mnt/repo
+            kustomize build ./overlays/production | kubectl apply -f -
+      volumeMounts:
+        - name: repo
+          mountPath: /mnt/repo
+      volumes:
+        - name: repo
+          emptyDir: {}
+
+    - name: wait-for-apply
+      container:
+        image: "alpine:3.12"
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "Waiting for the deployment to complete"
+            sleep 60  # Adjust sleep based on your needs
