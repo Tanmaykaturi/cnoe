@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: nginx-deploy
+  namespace: argo
+spec:
+  entrypoint: nginx-deployment
+  templates:
+  - name: nginx-deployment
+    steps:
+    - - name: deploy-nginx
+        template: deploy-nginx
+
+  - name: deploy-nginx
+    container:
+      image: nginx:latest
+      command: [sh, -c]
+      args: ["echo 'Deploying Nginx'; sleep 10"]
