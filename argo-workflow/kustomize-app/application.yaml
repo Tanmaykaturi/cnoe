@@ -16,7 +16,7 @@ spec:
       container:
         image: "alpine/git"
         command: ["/bin/sh", "-c"]
-        args: ["git clone https://github.com/your/repository.git /mnt/repo"]
+        args: ["git clone https://github.com/OpsMx/cnoe.git /mnt/repo"]
         volumeMounts:
           - name: repo
             mountPath: /mnt/repo
