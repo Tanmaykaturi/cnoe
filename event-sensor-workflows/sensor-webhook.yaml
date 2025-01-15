@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  annotations:
+  name: webhook
+  namespace: argo-events
+spec:
+  dependencies:
+  - eventName: webhook
+    eventSourceName: webhook
+    name: webhook-generic
+  loggingFields: null
+  template:
+    serviceAccountName: operate-workflow-sa
+  triggers:
+  - template:
+      k8s:
+        operation: create
+        parameters:
+        - dest: spec.arguments.parameters.0.value
+          src:
+            dataKey: body.message
+            dependencyName: webhook-generic
+        source:
+          resource:
+            apiVersion: argoproj.io/v1alpha1
+            kind: Workflow
+            metadata:
+              generateName: webhook-
+            spec:
+              arguments:
+                parameters:
+                - name: message
+                  value: WILLBEREPLACED
+              entrypoint: whalesay
+              templates:
+              - container:
+                  args:
+                  - '{{inputs.parameters.message}}'
+                  command:
+                  - cowsay
+                  image: docker/whalesay:latest
+                inputs:
+                  parameters:
+                  - name: message
+                name: whalesay
+      name: webhook-workflow-trigger
