@@ -43,7 +43,7 @@ spec:
               templates:
               - container:
                   args:
-                  - Push in repo: '{{inputs.parameters.message}}'
+                  - '{{inputs.parameters.message}}'
                   command:
                   - cowsay
                   image: docker/whalesay:latest
