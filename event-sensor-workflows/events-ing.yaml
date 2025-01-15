@@ -1,0 +1,46 @@
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-isd-argo-argocd
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    name: webhook-ingress
+    namespace: argo-events
+  spec:
+    rules:
+    - host: webhook-events.srini-striks.opsmx.co
+      http:
+        paths:
+        - backend:
+            service:
+              name: webhook-eventsource-svc
+              port:
+                number: 12000
+          path: /webhook
+          pathType: Prefix
+        - backend:
+            service:
+              name: github-eventsource-svc
+              port:
+                number: 13000
+          path: /gitpush
+          pathType: Prefix
+        - backend:
+            service:
+              name: opsmxgitpush-eventsource-svc
+              port:
+                number: 13000
+          path: /cnoe-events
+          pathType: Prefix
+    tls:
+    - hosts:
+      - webhook-events.srini-striks.opsmx.co
+      secretName: webhook-events-tls-certificate
+  status:
+    loadBalancer: {}
+kind: List
+metadata:
+  resourceVersion: ""
