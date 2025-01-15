@@ -18,9 +18,9 @@ spec:
       events:
         - "push"
         #- "*"
-      #webhookSecret:
-      # name: github-access
-      # key: secret
+      webhookSecret:
+        name: opsmx-git-webhook-secret
+        key: secret
       insecure: false
       active: true
       contentType: "json"
