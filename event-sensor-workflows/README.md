@@ -1,4 +1,4 @@
-# Artifacts spinnaker-type github/webhook-triggered pipelines/workflows
+# Artifacts for github/webhook-triggered pipelines/workflows use-cases
 
 The working set-up is in srini-strix. Argo-events is setup in argo-events, argo-workflows in argo and argocd in argocd namespaces.
 
