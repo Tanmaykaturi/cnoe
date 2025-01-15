@@ -1,49 +1,31 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Workflow
+kind: WorkflowTemplate
 metadata:
-  generateName: kustomize-deploy
+  name: deploy-kustomize-helm
 spec:
-  entrypoint: kustomize-deploy
+  entrypoint: deploy-pipeline
   templates:
-    - name: kustomize-deploy
-      steps:
-        - - name: clone-repo
-            template: clone-repo
-        - - name: apply-kustomize
-            template: apply-kustomize
+  - name: deploy-pipeline
+    steps:
+    - - name: kustomize-deploy
+        template: kustomize-deploy
+    - - name: helm-deploy
+        template: helm-deploy
 
-    - name: clone-repo
-      container:
-        image: "alpine/git"
-        command: ["/bin/sh", "-c"]
-        args: ["git clone https://github.com/OpsMx/cnoe.git /mnt/repo"]
-        volumeMounts:
-          - name: repo
-            mountPath: /mnt/repo
-      volumes:
-        - name: repo
-          emptyDir: {}
+  - name: kustomize-deploy
+    container:
+      image: "kustomize/kustomize:v4.5.7"
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          echo "Deploying with Kustomize..."
+          kustomize build /workspace/kustomize-dir | kubectl apply -f -
 
-    - name: apply-kustomize
-      container:
-        image: "kustomize/kustomize:v4.5.7"
-        command: ["/bin/sh", "-c"]
-        args:
-          - |
-            cd /mnt/repo
-            kustomize build ./overlays/production | kubectl apply -f -
-      volumeMounts:
-        - name: repo
-          mountPath: /mnt/repo
-      volumes:
-        - name: repo
-          emptyDir: {}
-
-    - name: wait-for-apply
-      container:
-        image: "alpine:3.12"
-        command: ["/bin/sh", "-c"]
-        args:
-          - |
-            echo "Waiting for the deployment to complete"
-            sleep 60  # Adjust sleep based on your needs
+  - name: helm-deploy
+    container:
+      image: "alpine/helm:3.6.3"
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          echo "Deploying with Helm..."
+          helm upgrade --install my-release /workspace/helm-chart --namespace helm-kustomize-naveen
