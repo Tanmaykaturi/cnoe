@@ -10,12 +10,22 @@ k get ing
 k get sensors
 k -n argo get workflowtemplates
 ```
+### Debugging:
+Each eventsource and sensor has its own pod for handling the events and processing them. Tail the logs of the eventsource and sensor pods to see the actions being taken
 
-Webhook-triggers a workflow
-1. Webhook trigger :
+URL: https://argo.srini-striks.opsmx.co/event-flow/argo-events
+
+## Webhook demo: Objective: A workflow can be trigged via a webhook
+1. webhook eventsource is set up for receving a trigger
+2. Webhook trigger :
 ```curl -vvv -d '{"message":"test"}' https://webhook-events.srini-striks.opsmx.co/webhook -H "content-type: application/json"```
-2. URL: https://argo.srini-striks.opsmx.co/event-flow/argo-events
 3. we should see a new webhook-pod getting created in argo-events namespace
-4. Debugging: tail the logs of the eventsource and sensor pods to see the actions being taken
+
+## github demo:  Objective: A workflow can be trigged via a git push in any repo in an organization
+1. opsmxgitpush eventsource is set up for receving a trigger for a push to main branch of cnoe and ssdgate repos
+2. Make a change in opsms/cnoe repo 
+3. See the workflow triggered
+4. Click on the workflow pod (green circle), click on it again, go to "input/outputs" tab
+5. We should see message: cnoe which is the repo name. If we do the same with ssdgate, we can see that repo name.
 
 TODO: pod-logs are not showing up in sensor-created workflow pods. Looks like authentication is the issue?
