@@ -1,0 +1,27 @@
+# Info on GitHub Webhook: https://developer.github.com/v3/repos/hooks/#create-a-hook
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: opsmxgitpush
+spec:
+  github:
+    gitpush:
+      repositories:
+        - owner: opsmx
+          names:
+            - cnoe  #For testing
+            - argo-workflows
+      webhook:
+        endpoint: "/cnoe-events"
+        port: "13000"
+        method: "POST"
+      events:
+        - "push"
+        #- "*"
+      #webhookSecret:
+      # name: github-access
+      # key: secret
+      insecure: false
+      active: true
+      contentType: "json"
+

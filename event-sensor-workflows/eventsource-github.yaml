@@ -1,0 +1,63 @@
+# Info on GitHub Webhook: https://developer.github.com/v3/repos/hooks/#create-a-hook
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: github
+spec:
+  service:
+    ports:
+      - name: gitpush
+        port: 13000
+        targetPort: 13000
+  github:
+    gitpush:
+      #owner: "sriniopsmx"
+      #repository: argo-solutions
+      repositories:
+        - owner: sriniopsmx
+          names:
+            - argo-solutions
+            - argo-workflows
+      webhook:
+        endpoint: "/gitpush"
+        port: "13000"
+        method: "POST"
+      events:
+        - "push"
+        #- "*"
+      #webhookSecret:
+      # name: github-access
+      # key: secret
+      insecure: false
+      active: true
+      contentType: "json"
+
+#    example-with-secure-connection:
+#      owner: "argoproj"
+#      repository: "argo"
+#      webhook:
+#        endpoint: "/push"
+#        port: "13000"
+#        method: "POST"
+#        url: "http://myargofakeurl.fake"
+#        # k8s secret that contains the cert
+#        serverCertSecret:
+#          name: my-secret
+#          key: cert-key
+#        # k8s secret that contains the private key
+#        serverKeySecret:
+#          name: my-secret
+#          key: pk-key
+#      events:
+#        - "push"
+#        - "delete"
+#      apiToken:
+#        name: github-access
+#        key: token
+#      webhookSecret:
+#        name: github-access
+#        key: secret
+#      insecure: true
+#      active: true
+#      contentType: "json"
+

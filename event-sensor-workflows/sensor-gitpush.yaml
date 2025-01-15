@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  annotations:
+  name: gitpush
+  namespace: argo-events
+spec:
+  dependencies:
+  - eventName: gitpush
+    eventSourceName: github
+    name: gitpush-generic
+    filters:
+      data:
+      - path: body.ref
+        type: string
+        value:
+        - "refs/heads/main"
+  template:
+    serviceAccountName: operate-workflow-sa
+  triggers:
+  - template:
+      k8s:
+        operation: create
+        parameters:
+        - dest: spec.arguments.parameters.0.value
+          src:
+            dataKey: body.ref
+            #dataKey: body.commits.0.message
+            dependencyName: gitpush-generic
+        source:
+          resource:
+            apiVersion: argoproj.io/v1alpha1
+            kind: Workflow
+            metadata:
+              generateName: gitpush-
+            spec:
+              arguments:
+                parameters:
+                - name: message
+                  value: WILLBEREPLACED
+              entrypoint: whalesay
+              templates:
+              - container:
+                  args:
+                  - '{{inputs.parameters.message}}'
+                  command:
+                  - cowsay
+                  image: docker/whalesay:latest
+                inputs:
+                  parameters:
+                  - name: message
+                name: whalesay
+      name: gitpush-workflow-trigger
