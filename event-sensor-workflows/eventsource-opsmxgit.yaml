@@ -4,13 +4,14 @@ kind: EventSource
 metadata:
   name: opsmxgitpush
 spec:
+  # Manually created the service and updated the ingress
   github:
     opsmxpush:
       repositories:
         - owner: opsmx
           names:
-            - cnoe  #For testing
-            - argo-workflows
+            - cnoe  #For testing, we can give multiple repos
+            - ssdgate
       webhook:
         endpoint: "/cnoe-events"
         port: "13000"
@@ -18,7 +19,7 @@ spec:
       events:
         - "push"
         #- "*"
-      webhookSecret:
+      webhookSecret:  # Need to create this secret in argo-events namespace for the trigger to work
         name: opsmx-git-webhook-secret
         key: secret
       insecure: false
