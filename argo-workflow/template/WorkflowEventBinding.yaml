@@ -1,0 +1,11 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowEventBinding
+metadata:
+  name: python-app-workflow  # Name of the event binding
+  namespace: argo  # Ensure the correct namespace
+spec:
+  event:
+    selector: "true"  # Simple selector; this can be customized for a specific event
+  submit:
+    workflowTemplateRef:
+      name: python-app-template  # Reference the WorkflowTemplate instead of the Workflow

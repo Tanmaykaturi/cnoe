@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: build-it
+  namespace: argo  # Corrected 'hamespace' to 'namespace'
+spec:
+  entrypoint: main  # Corrected 'Espec' to 'spec' and entrypoint reference
+  templates:
+    - name: main  # Corrected the indentation and template structure
+      container:
+        name: main
+        image: 'argoproj/argosay:v2'  # Corrected image format
+        command: [ "echo" ]
+        args: [ "Hello from Argo Workflow!" ]

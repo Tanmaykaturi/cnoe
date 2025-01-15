@@ -2,7 +2,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
   name: deploy-kustomize-helm
-  namespace: test
 spec:
   entrypoint: deploy-pipeline
   templates:

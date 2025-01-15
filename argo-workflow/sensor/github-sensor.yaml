@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: github-push-sensor
+spec:
+  dependencies:
+    - name: github-push-dependency
+      eventSourceName: github-push-event-source  # EventSource created earlier
+      eventName: example-repo-push  # Name of the GitHub push event
+  triggers:
+    - template:
+        name: workflow-trigger
+        k8s:
+          group: argoproj.io
+          version: v1alpha1
+          resource: workflows
+          namespace: argo
+          operation: submit
+          parameters:
+            - src:
+                dependencyName: github-push-dependency  # Dependency from EventSource
+                dataKey: body
+              dest: spec.arguments.parameters
