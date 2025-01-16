@@ -14,10 +14,11 @@ spec:
   - eventName: opsmxpush 
     eventSourceName: opsmxgitpush
     name: opsmxpush-generic      
-    #transform:
-    #  script: |-
-    #    event.body.sender.gravatar_id = "Push to branch" .. event.body.ref .. " in repo " ..  event.body.repository.name .. "Hash: " ..  event.body.after # Using an unused field in the json
-    #    return event
+    transform:
+      script: |-
+        event.body.sender.gravatar_id = "Push to branch" .. event.body.ref .. 
+        #" in repo " ..  event.body.repository.name .. "Hash: " ..  event.body.after # Using an unused field in the json
+        return event
     filters:
       data:
       - path: body.ref
