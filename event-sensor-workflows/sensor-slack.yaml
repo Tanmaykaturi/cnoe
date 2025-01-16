@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: slack
+spec:
+  dependencies:
+  - eventName: webhook
+    eventSourceName: webhook
+    name: webhook-generic
+  - eventName: opsmxpush 
+    eventSourceName: opsmxgitpush
+    name: opsmxpush-generic      
+    filters:
+      data:
+      - path: body.ref
+        type: string
+        value:
+        - "refs/heads/main"   # Trigger for push only on main
+  triggers:
+    - parameters:
+        - src:
+            dependencyName: webhook-generic
+            dataKey: body.message
+          dest: slack.message
+      template:
+        conditions: "webhook-generic"
+        name: slack-trigger-webhook
+        slack:
+          slackToken:
+            key: token
+            name: slack-token
+          channel: isd-slackops-notification
+          message: Unchanged message
+    - parameters:
+        - src:
+            dependencyName: opsmxpush-generic
+            dataKey: body.ref
+          dest: slack.message
+      template:
+        conditions: "opsmxpush-generic"
+        name: slack-trigger-opsmx
+        slack:
+          slackToken:
+            key: token
+            name: slack-token
+          channel: isd-slackops-notification
+          message: Unchanged message
