@@ -28,4 +28,9 @@ URL: https://argo.srini-striks.opsmx.co/event-flow/argo-events
 4. Click on the workflow pod (green circle), click on it again, go to "input/outputs" tab
 5. We should see message: cnoe which is the repo name. If we do the same with ssdgate, we can see that repo name.
 
+## Slack notifications:  Objective: A slack notification should be sent on event
+1. Go to isd-slackops-notification channel (in Opsmx-ISD:Pipeline-nofications account)
+2. You should see notifications on webhook and github triggers with some interesting information
+
+
 TODO: pod-logs are not showing up in sensor-created workflow pods. Looks like authentication is the issue?
