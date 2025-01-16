@@ -1,0 +1,11 @@
+apiVersion: argoproj.io/v1alpha1  # Corrected 'vialphal' to 'v1alpha1'
+kind: WorkflowEventBinding
+metadata:
+  name: build-it
+  namespace: argo  # Corrected 'namespace' (was 'hamespace')
+spec:
+  event:
+    selector: "false"  # Ensure selector is correctly defined (a simple example)
+  submit:
+    workflowTemplateRef:
+      name: build-it  # This is the name of the WorkflowTemplate to trigger

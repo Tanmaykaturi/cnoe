@@ -1,0 +1,7 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: build-its
+spec:
+   workflowTemplateRef:
+      name: build-it

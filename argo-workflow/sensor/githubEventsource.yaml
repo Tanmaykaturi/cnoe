@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: github-push-event-source
+spec:
+  github:
+    example-repo:
+      webhook:
+        endpoint: /push
+        port: "12000"  # The port to listen on
+      repo: "https://github.com/NaveenBalagouni/python-docker.git"
+      repositories:
+        - "python-docker"
+      events:
+        - push  # Event type to listen for (this listens for pushes to the repo)
+      secret:
+        name: github-webhook-secret  # Secret for GitHub Webhook (store it in Kubernetes)
+        key: secret  # Secret key inside the Secret object

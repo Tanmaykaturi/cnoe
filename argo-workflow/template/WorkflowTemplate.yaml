@@ -1,0 +1,11 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: python-app-template  # Name of the WorkflowTemplate
+spec:
+  entrypoint: python-app
+  templates:
+    - name: python-app
+      container:
+        image: naveenbalagouni/python-docker-app  # Ensure this points to the updated image
+        command: ["python", "app.py"]
