@@ -17,7 +17,7 @@ spec:
     # Using an unused field in the json in the lua script to create a reasonable message
     transform:
       script: |-
-        event.body.sender.gravatar_id = "Push to branch" .. event.body.ref ..  " in repo " ..  event.body.repository.name .. "Hash: " ..  event.body.after
+        event.body.sender.gravatar_id = "Push to branch " .. event.body.ref ..  " in repo " ..  event.body.repository.name .. " HashAfter: " ..  event.body.after .. " by " .. event.body.sender.login
         return event
     filters:
       data:
