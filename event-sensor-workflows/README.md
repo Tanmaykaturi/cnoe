@@ -15,7 +15,7 @@ Each eventsource and sensor has its own pod for handling the events and processi
 
 URL: https://argo.srini-striks.opsmx.co/event-flow/argo-events
 
-## Webhook demo: Objective: A workflow can be trigged via a webhook
+## Webhook demo: Objective: A workflow can be trigged via a workflow
 1. webhook eventsource is set up for receving a trigger
 2. Webhook trigger :
 ```curl -vvv -d '{"message":"test"}' https://webhook-events.srini-striks.opsmx.co/webhook -H "content-type: application/json"```
