@@ -42,7 +42,7 @@ spec:
     - parameters:
         - src:
             dependencyName: opsmxpush-generic
-            dataKey: event.body.message
+            dataKey: body.ref
           dest: slack.message
       template:
         conditions: "opsmxpush-generic"
