@@ -42,9 +42,9 @@ spec:
             echo "Contents of /workspace/kustomize-dir:"
             ls -al /workspace/kustomize-dir
 
-            # Deploy using Kustomize
+            # Deploy using Kustomize (corrected directory)
             echo "Deploying with Kustomize..."
-            kustomize build /cnoe\workspace\kustomize-dir | kubectl apply -f -
+            kustomize build /workspace/kustomize-dir | kubectl apply -f -
 
     - name: helm-deploy
       container:
