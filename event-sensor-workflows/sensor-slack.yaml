@@ -14,8 +14,8 @@ spec:
   - eventName: opsmxpush 
     eventSourceName: opsmxgitpush
     name: opsmxpush-generic      
+    # Using an unused field in the json in the lua script to create a reasonable message
     transform:
-      # Using an unused field in the json in the lua script to create a reasonable message
       script: |-
         event.body.sender.gravatar_id = "Push to branch" .. event.body.ref ..  " in repo " ..  event.body.repository.name .. "Hash: " ..  event.body.after
         return event
