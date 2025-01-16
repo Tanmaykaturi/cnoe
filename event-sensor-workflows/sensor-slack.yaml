@@ -10,6 +10,10 @@ spec:
   - eventName: opsmxpush 
     eventSourceName: opsmxgitpush
     name: opsmxpush-generic      
+    transform:
+      script: |-
+          event.body.message= body.ref .. "branch from repo" .. body.repository.name
+          return event
     filters:
       data:
       - path: body.ref
@@ -34,7 +38,7 @@ spec:
     - parameters:
         - src:
             dependencyName: opsmxpush-generic
-            dataKey: body.ref
+            dataKey: event.body.message
           dest: slack.message
       template:
         conditions: "opsmxpush-generic"
