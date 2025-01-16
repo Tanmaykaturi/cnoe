@@ -1,0 +1,100 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: deploy-pipeline
+  namespace: argo-workflows
+spec:
+  entrypoint: deploy-pipeline
+  templates:
+    - name: deploy-pipeline
+      steps:
+        - - name: clone-repo
+            template: clone-repo
+        - - name: maven-build
+            template: maven-build
+        - - name: kaniko-build-push
+            template: kaniko-build-push
+        - - name: update-values-yaml
+            template: update-values-yaml
+
+    - name: clone-repo
+      container:
+        image: "quay.io/opsmxpublic/opsmx-custom-binaries:kubectl-spin-cli-git-bash-jq-yq-argocd-v2"
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "Cloning repository..."
+            git clone --branch $BRANCH https://github.com/OpsMx/issue-generator.git /mnt/git-repo
+            cd /mnt/git-repo
+            git checkout $BRANCH
+      volumeMounts:
+        - mountPath: /mnt/git-repo
+          name: git-pvc
+      envFrom:
+        - secretRef:
+            name: git-credentials
+      env:
+        - name: REPO_URL
+          value: "https://github.com/OpsMx/issue-generator.git"
+        - name: BRANCH
+          value: "main"
+
+    - name: maven-build
+      container:
+        image: "maven"
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "Building project with Maven..."
+            cd /mnt/git-repo
+            mvn clean install
+      volumeMounts:
+        - mountPath: /mnt/git-repo
+          name: git-pvc
+
+    - name: kaniko-build-push
+      container:
+        image: "bitnami/kaniko"
+        command: ["/kaniko/executor"]
+        args:
+          - "--context=/mnt/git-repo"
+          - "--dockerfile=/mnt/git-repo/Dockerfile"
+          - "--destination=$DOCKER_REGISTRY/$DOCKER_IMAGE:$IMAGE_TAG"
+      volumeMounts:
+        - mountPath: /mnt/git-repo
+          name: git-pvc
+      envFrom:
+        - secretRef:
+            name: docker-credentials
+      env:
+        - name: DOCKER_REGISTRY
+          value: "quay.io"
+        - name: DOCKER_IMAGE
+          value: "quay.io/opsmxpublic/opsmx-custom-binaries:kubectl-spin-cli-git-bash-jq-yq-argocd-v2"
+        - name: IMAGE_TAG
+          value: "kubectl-spin-cli-git-bash-jq-yq-argocd-v2"
+
+    - name: update-values-yaml
+      container:
+        image: "quay.io/opsmxpublic/opsmx-custom-binaries:kubectl-spin-cli-git-bash-jq-yq-argocd-v2"
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "Updating values.yaml..."
+            yq eval '.appVersion = "1.0.0"' -i /mnt/git-repo/helm-app/values.yaml
+            cd /mnt/git-repo
+            git config --global user.email "naveen.balagouni@opsmx.io"
+            git config --global user.name "Naveen Balagouni"
+            git commit -am "Updated helm-app/values.yaml"
+            git push origin main
+      volumeMounts:
+        - mountPath: /mnt/git-repo
+          name: git-pvc
+      envFrom:
+        - secretRef:
+            name: git-credentials
+
+  volumes:
+    - name: git-pvc
+      persistentVolumeClaim:
+        claimName: git-pvc

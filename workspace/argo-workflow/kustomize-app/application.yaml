@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: deploy-kustomize-helm
+  namespace: argo-workflows
+spec:
+  entrypoint: deploy-pipeline
+  templates:
+    - name: deploy-pipeline
+      steps:
+        - - name: kustomize-deploy
+            template: kustomize-deploy
+        - - name: helm-deploy
+            template: helm-deploy
+
+    - name: kustomize-deploy
+      container:
+        image: "quay.io/opsmxpublic/kustomize:v2"
+        imagePullPolicy: Always
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            # Install git and kubectl (using apk for Alpine)
+            echo "Installing git..."
+            apk update && apk add --no-cache git
+
+            echo "Installing kubectl..."
+            curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+            chmod +x kubectl
+            mv kubectl /usr/local/bin/
+
+            # Create the required directory
+            echo "Creating /workspace/kustomize-dir directory"
+            mkdir -p /workspace/kustomize-dir
+            echo "Directory /workspace/kustomize-dir created"
+
+            # Clone the repository containing your Kustomize configuration
+            echo "Cloning Kustomize repo..."
+            git clone https://github.com/OpsMx/cnoe.git /workspace/kustomize-dir
+
+            # Verify the contents of /workspace/kustomize-dir
+            echo "Contents of /workspace/kustomize-dir:"
+            ls -al /workspace/kustomize-dir
+
+            # Deploy using Kustomize
+            echo "Deploying with Kustomize..."
+            kustomize build /cnoe\workspace\kustomize-dir | kubectl apply -f -
+
+    - name: helm-deploy
+      container:
+        image: "alpine/helm:3.6.3"
+        imagePullSecrets:
+          - name: my-docker-secret
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "Deploying with Helm..."
+            helm upgrade --install my-release /workspace/helm-chart --namespace argo-workflows
