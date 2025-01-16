@@ -43,7 +43,7 @@ spec:
     - parameters:
         - src:
             dependencyName: opsmxpush-generic
-            dataKey: body.ref
+            dataKey: body.sender.gravatar_id
           dest: slack.message
       template:
         conditions: "opsmxpush-generic"
