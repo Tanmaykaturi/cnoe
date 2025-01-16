@@ -7,13 +7,17 @@ spec:
   - eventName: webhook
     eventSourceName: webhook
     name: webhook-generic
+    transform:
+      script: |-
+        event.body.message = "Received:" .. event.body.message .. "with additional text:" .. event.body.text
+        return event
   - eventName: opsmxpush 
     eventSourceName: opsmxgitpush
     name: opsmxpush-generic      
     transform:
       script: |-
-          event.body.message= body.ref .. "branch from repo" .. body.repository.name
-          return event
+        event.body.sender.gravatar_id = "Push to branch" ..body.ref .. " in repo " .. body.repository.name .. "Hash: " .. body.after # Using an unused field in the json
+        return event
     filters:
       data:
       - path: body.ref
